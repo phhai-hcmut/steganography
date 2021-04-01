@@ -81,4 +81,4 @@ def extract(signal):
 
 
 if __name__ == '__main__':
-    embed_audio('audio.wav')
+    embed_file("hello", 'audio.wav')
