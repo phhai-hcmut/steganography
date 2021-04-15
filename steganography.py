@@ -54,6 +54,9 @@ def embed(cover_signal, msg):
     # streng factor must be proportional to message's amplitude (or frequency idk)
     max_volume = np.max(np.abs(cover_signal))
     str_fact = max_volume / STR_FACTOR_WEIGHT
+    if isinstance(cover_signal, np.integer):
+        # Round strength factor if input signal is in integer format
+        str_fact = round(str_fact)
 
     modulated = (np.atleast_2d(M).T @ np.atleast_2d(pn_seq)).ravel() * str_fact
     # Pad modulated signal with 0 so it have the same shape as the cover signal
