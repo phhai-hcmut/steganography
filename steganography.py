@@ -1,3 +1,5 @@
+import argparse
+
 import numpy as np
 from scipy.io import wavfile
 
@@ -18,12 +20,10 @@ def binary2text(bit_array):
     a = np.packbits(bit_array)
     # null-terminated string
     string_end = list(a).index(0)
-    print(a[:string_end])
     return bytes(a[:string_end]).decode()
 
 
 def gen_pn_seq():
-    seed = 0
     rng = np.random.default_rng(seed)
     pn_seq = rng.choice([-1, 1], size=SPREADING_FACTOR)
     return pn_seq
@@ -90,5 +90,16 @@ def extract(signal):
 
 
 if __name__ == '__main__':
-    embed_file("TRANHOANGLONGPHAMHOANGHAIVOQUANGTU", 'preamble.wav', 'stergo.wav')
-    print(extract_file('stergo.wav'))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--decrypt', '-d', action='store_true')
+    parser.add_argument('in_file')
+    parser.add_argument('out_file', nargs='?')
+    parser.add_argument('message', nargs='?')
+    parser.add_argument('--seed', nargs='?', type=int, default=0)
+    args = parser.parse_args()
+
+    seed = args.seed
+    if args.decrypt:
+        print(extract_file(args.in_file))
+    else:
+        embed_file(args.message, args.in_file, args.out_file)
